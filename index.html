@@ -130,22 +130,23 @@
 
         /* Flight Animation */
         @keyframes flyAway {
-            0% { 
-                transform: translate(-50%, -50%) scale(0) rotate(0deg); 
-                opacity: 0; 
-            }
-            15% { 
-                opacity: 1; 
-                transform: translate(-50%, -50%) scale(1); 
-            }
-            100% { 
-                transform: translate(
-                    calc(-50% + (var(--drift-x) * 150px)), 
-                    calc(-50% - 250px)
-                ) rotate(var(--rotation)); 
-                opacity: 0; 
-            }
+    0% { 
+        transform: translate(-50%, -50%) scale(0) rotate(0deg); 
+        opacity: 0; 
+    }
+    15% { 
+        opacity: 1; 
+        transform: translate(-50%, -50%) scale(1); 
+    }
+    100% { 
+        /* Change -250px to -110vh to ensure they exit the top of the screen */
+        transform: translate(
+            calc(-50% + (var(--drift-x) * 150px)), 
+            calc(-50% - 110vh) 
+        ) rotate(var(--rotation)); 
+        opacity: 0; 
         }
+    }
     </style>
 </head>
 <body>
@@ -192,10 +193,14 @@
 
     // 2. High-Frequency Ambient Spawning
     function spawnAmbientButterfly() {
-        const x = Math.random() * window.innerWidth;
-        const y = window.innerHeight + 20; 
-        createButterfly(x, y);
-    }
+    const x = Math.random() * window.innerWidth;
+    
+    // Randomize the starting Y so they don't all start at the floor
+    // This fills the entire "vertical volume" of the phone screen
+    const y = Math.random() * window.innerHeight; 
+    
+    createButterfly(x, y);
+}
 
     // Spawns a new symbol every 200ms (5 per second)
     setInterval(spawnAmbientButterfly, 200);
